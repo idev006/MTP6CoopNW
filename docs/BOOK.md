@@ -260,6 +260,32 @@
 - Work packages
 - Definition of Ready / Done
 
+### บทที่ 17 — Implementation Backlog & Build Order
+ไฟล์: [16_IMPLEMENTATION_BACKLOG.md](16_IMPLEMENTATION_BACKLOG.md)
+
+หัวข้อหลัก:
+- Milestones M0–M12
+- Build order
+- Fake-first development
+- Read-only before enforcement
+- Dry-run planner
+- Reconciliation
+- Central UI
+- Packaging
+
+### บทที่ 18 — Automated Testing & Monitoring Strategy
+ไฟล์: [17_AUTOMATED_TESTING_AND_MONITORING.md](17_AUTOMATED_TESTING_AND_MONITORING.md)
+
+หัวข้อหลัก:
+- Testing pyramid
+- Python/Pester tooling
+- Fake/Mock/Windows integration levels
+- Health model
+- CI workflow separation
+- Evidence automation
+- Production monitoring
+- Diagnostics bundle
+
 ## ภาคผนวก
 
 ### Appendix A — Architecture Decision Records
