@@ -6,6 +6,7 @@ from mtp6coopnw.adapters.interfaces import (
     FirewallPort,
     NetworkPort,
     PolicyStore,
+    ServicePort,
     SqlPort,
     TransportPort,
 )
@@ -16,6 +17,7 @@ __all__ = [
     "FirewallPort",
     "NetworkPort",
     "PolicyStore",
+    "ServicePort",
     "SqlPort",
     "TransportPort",
 ]
