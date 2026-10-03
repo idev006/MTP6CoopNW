@@ -19,7 +19,6 @@ from mtp6coopnw.observability import (
     redact_mapping,
 )
 
-
 NOW = datetime(2026, 10, 3, 8, 0, tzinfo=UTC)
 
 
