@@ -4,10 +4,10 @@ BeforeAll {
 
 Describe 'MTP6 PowerShell adapter bootstrap' {
     $modules = @(
-        @{ Path = 'powershell/MTP6.Network/MTP6.Network.psm1'; Function = 'Get-MTP6NetworkAdapterMetadata' },
-        @{ Path = 'powershell/MTP6.Firewall/MTP6.Firewall.psm1'; Function = 'Get-MTP6FirewallAdapterMetadata' },
-        @{ Path = 'powershell/MTP6.Services/MTP6.Services.psm1'; Function = 'Get-MTP6ServicesAdapterMetadata' },
-        @{ Path = 'powershell/MTP6.Sql/MTP6.Sql.psm1'; Function = 'Get-MTP6SqlAdapterMetadata' }
+        @{ Path = 'powershell/MTP6.Network/MTP6.Network.psm1'; Function = 'Get-MTP6NetworkAdapterInfo' },
+        @{ Path = 'powershell/MTP6.Firewall/MTP6.Firewall.psm1'; Function = 'Get-MTP6FirewallAdapterInfo' },
+        @{ Path = 'powershell/MTP6.Services/MTP6.Services.psm1'; Function = 'Get-MTP6ServiceAdapterInfo' },
+        @{ Path = 'powershell/MTP6.Sql/MTP6.Sql.psm1'; Function = 'Get-MTP6SqlAdapterInfo' }
     )
 
     It 'imports <Path> and reports destructive operations disabled' -ForEach $modules {
