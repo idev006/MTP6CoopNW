@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+import datetime
 import ipaddress
-from datetime import time
-from typing import Any
-from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+import typing
+import zoneinfo
 
 from mtp6coopnw.config.loader import ConfigError
-
 
 _ALLOWED_DAYS = {"mon", "tue", "wed", "thu", "fri", "sat", "sun"}
 _ALLOWED_ROLES = {"client", "database_server", "control"}
@@ -14,14 +13,14 @@ _ALLOWED_PROTOCOLS = {"tcp", "udp"}
 _ALLOWED_FAIL_SAFE = {"last_known_valid"}
 
 
-def _require_table(data: dict[str, Any], key: str) -> dict[str, Any]:
+def _require_table(data: dict[str, typing.Any], key: str) -> dict[str, typing.Any]:
     value = data.get(key)
     if not isinstance(value, dict):
         raise ConfigError(f"Expected TOML table [{key}]")
     return value
 
 
-def _require_int(table: dict[str, Any], key: str, *, minimum: int | None = None) -> int:
+def _require_int(table: dict[str, typing.Any], key: str, *, minimum: int | None = None) -> int:
     value = table.get(key)
     if not isinstance(value, int) or isinstance(value, bool):
         raise ConfigError(f"Expected integer: {key}")
@@ -30,21 +29,21 @@ def _require_int(table: dict[str, Any], key: str, *, minimum: int | None = None)
     return value
 
 
-def _require_bool(table: dict[str, Any], key: str) -> bool:
+def _require_bool(table: dict[str, typing.Any], key: str) -> bool:
     value = table.get(key)
     if not isinstance(value, bool):
         raise ConfigError(f"Expected boolean: {key}")
     return value
 
 
-def _require_str(table: dict[str, Any], key: str) -> str:
+def _require_str(table: dict[str, typing.Any], key: str) -> str:
     value = table.get(key)
     if not isinstance(value, str) or not value.strip():
         raise ConfigError(f"Expected non-empty string: {key}")
     return value.strip()
 
 
-def _validate_schema_version(data: dict[str, Any]) -> None:
+def _validate_schema_version(data: dict[str, typing.Any]) -> None:
     version = data.get("schema_version")
     if version != 1:
         raise ConfigError("schema_version must be 1")
@@ -52,8 +51,8 @@ def _validate_schema_version(data: dict[str, Any]) -> None:
 
 def _validate_timezone(value: str) -> None:
     try:
-        ZoneInfo(value)
-    except ZoneInfoNotFoundError as exc:
+        zoneinfo.ZoneInfo(value)
+    except zoneinfo.ZoneInfoNotFoundError as exc:
         raise ConfigError(f"Unknown timezone: {value}") from exc
 
 
@@ -64,12 +63,12 @@ def _validate_port(value: int, field: str) -> None:
 
 def _validate_time(value: str, field: str) -> None:
     try:
-        time.fromisoformat(value)
+        datetime.time.fromisoformat(value)
     except ValueError as exc:
         raise ConfigError(f"{field} must be an ISO time such as 08:00") from exc
 
 
-def validate_core_config(data: dict[str, Any]) -> None:
+def validate_core_config(data: dict[str, typing.Any]) -> None:
     _validate_schema_version(data)
 
     core = _require_table(data, "core")
@@ -110,7 +109,7 @@ def validate_core_config(data: dict[str, Any]) -> None:
     _require_str(logging, "format")
 
 
-def validate_agent_config(data: dict[str, Any]) -> None:
+def validate_agent_config(data: dict[str, typing.Any]) -> None:
     _validate_schema_version(data)
 
     agent = _require_table(data, "agent")
@@ -136,7 +135,7 @@ def validate_agent_config(data: dict[str, Any]) -> None:
         _require_str(adapters, key)
 
 
-def validate_policy_config(data: dict[str, Any]) -> None:
+def validate_policy_config(data: dict[str, typing.Any]) -> None:
     _validate_schema_version(data)
     revision = data.get("policy_revision")
     if not isinstance(revision, int) or isinstance(revision, bool) or revision < 1:
@@ -202,7 +201,7 @@ def validate_policy_config(data: dict[str, Any]) -> None:
             ) from exc
 
 
-def validate_logging_config(data: dict[str, Any]) -> None:
+def validate_logging_config(data: dict[str, typing.Any]) -> None:
     _validate_schema_version(data)
     logging = _require_table(data, "logging")
     _require_str(logging, "level")
