@@ -1,62 +1,140 @@
 # 08 — Roadmap
 
-## Phase 0 — Documentation Baseline
-Status: STARTED
-- Establish SSOT
-- Define requirements
-- Define architecture
-- Define network/security/operations
-- Define engine contracts
-- Define testing policy
+## Purpose
+บทนี้กำหนดลำดับการพัฒนาและ gate ของโครงการ โดยทุก phase ต้องอ้างอิง Project Book และ SSOT
 
-Exit: documents reviewed and baseline assumptions verified onsite
+## Phase 0 — Project Book & Documentation Baseline
+Status: IN PROGRESS
 
-## Phase 1 — Engine Foundation
-- Repository source structure
-- Config schema + validator
-- Common result/error model
-- Audit engine
-- Diagnostics read-only engine
-- Unit tests
+Deliverables:
+- Project Book structure
+- Goals/Objectives/Scope
+- Requirements
+- Architecture
+- Network/Security
+- Engine/Adapter contracts
+- Use Case catalog
+- Workflows/Sequence/State diagrams
+- Team/RACI
+- Scope & Change Control
+- Glossary
+- Traceability Matrix
+- ADR baseline
 
-Exit: read-only diagnostics stable
+Exit:
+- chapters internally consistent
+- architecture decisions recorded
+- baseline assumptions verified onsite
+- unresolved questions explicitly recorded
 
-## Phase 2 — Network & Firewall Engines
-- NetworkEngine desired-state operations
-- FirewallEngine project-owned SQL rules
-- Rollback strategy
-- Integration tests
+## Phase 1 — Contracts & Repository Foundation
+- Python project structure
+- PowerShell adapter modules
+- schemas
+- host identity
+- policy revision
+- common result/error/event contract
+- test foundation
 
-Exit: safe repeatable configuration on test machines
+Exit:
+- schema validation passes
+- no destructive Windows mutation yet
 
-## Phase 3 — Maintenance Orchestration
-- MaintenanceEngine
-- Enable/Disable Maintenance
-- Verification gates
-- Audit/evidence output
+## Phase 2 — Read-Only Agent & Telemetry
+- Local Python Agent
+- host registration
+- heartbeat
+- network/firewall/SQL read-only adapters
+- state aggregation
+- OFFLINE/STALE detection
+- status UI/CLI shell
 
-Exit: acceptance tests for Normal/Maintenance transitions pass
+Exit:
+- DB Server + Clients visible centrally
+- heartbeat/status stable
 
-## Phase 4 — SQL & Backup Visibility
-- SqlEngine diagnostics
-- SQL connection test
-- Backup status/reporting
+## Phase 3 — Policy & Scheduler
+- Policy Engine
+- schedule rules
+- priority resolution
+- manual override
+- local policy persistence
+- timezone/clock check
+- policy distribution/version reconciliation
 
-## Phase 5 — First UI Shell
-- Minimal PowerShell CLI/menu
-- UI contains no business logic
+Exit:
+- schedule simulation/evaluation passes
+- restart preserves validated policy
 
-## Phase 6 — Desktop/Web UI Options
-เลือกตามความต้องการโดยไม่แก้ Engine semantics:
-- WPF/WinUI desktop
-- Local web dashboard
-- REST API + remote administration UI
+## Phase 4 — Firewall & Access Enforcement
+- Internet Allow/Deny
+- Database Allow/Deny
+- Port Policy
+- project-owned firewall rules
+- drift detection
+- reconciliation
+- rollback/recovery
 
-## Deferred
-- Central multi-host agent architecture
-- Notifications
-- Automated backup scheduling/retention
-- Mobile client
+Exit:
+- repeatable enforcement
+- control channel preserved
+- integration tests pass
+
+## Phase 5 — Host Usage & Process Control
+- host Enable/Disable
+- scheduled transition
+- interlocks
+- alarms
+- recovery
+- emergency disable semantics
+
+Exit:
+- Must-Have use cases pass
+
+## Phase 6 — DB Server Maintenance
+- Normal/Maintenance
+- temporary Internet enablement
+- Windows Update workflow
+- remote support integration
+- SQL/LAN preservation verification
+
+## Phase 7 — Operational Dashboard
+- selected Desktop/Web UI
+- live host tiles
+- alarms
+- policy/schedule editor
+- command results
+- audit/history
+
+Rule:
+UI contains no Windows enforcement logic
+
+## Phase 8 — Production Hardening
+- security review
+- installer/package
+- agent service recovery
+- config migration
+- heartbeat/performance tuning
+- failure injection
+- runbooks
+- site acceptance
+
+## Phase 9 — Controlled Rollout
+- pilot
+- staged Client rollout
+- DB Server rollout
+- evidence
+- post-rollout review
+
+## Future / Optional
+- UPS monitoring
+- notifications
+- alternate remote support adapter
+- managed router/firewall API
+- message broker
+- HA
+- richer backup automation
+- mobile UI
 
 ## Gate Rule
-ห้ามข้าม phase เพื่อเร่งสร้าง UI หาก Engine contract และ safety tests ยังไม่ผ่าน
+ห้ามข้าม phase เพื่อเร่ง UI หรือ destructive control หาก contract, test, safety และ recovery ของ phase ก่อนหน้ายังไม่ผ่าน
