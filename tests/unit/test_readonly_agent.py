@@ -15,7 +15,6 @@ from mtp6coopnw.testing import (
     InMemoryPolicyStore,
 )
 
-
 NOW = datetime(2026, 10, 3, 9, 0, tzinfo=UTC)
 
 
@@ -74,13 +73,15 @@ def test_read_only_reconcile_does_not_change_fake_adapter_state() -> None:
     assert audit.events[-1]["result"] == "READ_ONLY"
 
 
-def test_adapter_failure_produces_degraded_snapshot() -> None:
-    agent, transport, _, _ = _agent()
-
-    def fail() -> dict[str, object]:
+class FailingSqlAdapter:
+    def get_state(self) -> dict[str, object]:
         raise RuntimeError("simulated adapter failure")
 
-    agent.sql.get_state = fail  # type: ignore[method-assign]
+
+def test_adapter_failure_produces_degraded_snapshot() -> None:
+    agent, transport, _, _ = _agent()
+    agent.sql = FailingSqlAdapter()
+
     snapshot = agent.heartbeat()
 
     assert snapshot.healthy is False
