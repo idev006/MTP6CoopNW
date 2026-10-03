@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-function Get-MTP6ServicesAdapterMetadata {
+function Get-MTP6ServiceAdapterInfo {
     [CmdletBinding()]
     param()
 
@@ -11,4 +11,4 @@ function Get-MTP6ServicesAdapterMetadata {
     }
 }
 
-Export-ModuleMember -Function Get-MTP6ServicesAdapterMetadata
+Export-ModuleMember -Function Get-MTP6ServiceAdapterInfo
