@@ -15,7 +15,7 @@ Describe 'MTP6 PowerShell adapter bootstrap' {
         Import-Module $fullPath -Force
 
         $metadata = & $Function
-        $metadata.Phase | Should -Be 'M0'
+        $metadata.Phase | Should -Be 'M4'
         $metadata.DestructiveOperationsEnabled | Should -BeFalse
     }
 }

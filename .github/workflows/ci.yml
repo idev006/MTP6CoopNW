@@ -61,9 +61,12 @@ jobs:
       - name: Install test tools
         shell: pwsh
         run: |
-          Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force
-          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+          if (-not (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+            Register-PSRepository -Default
+          }
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -Repository PSGallery
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -Repository PSGallery
 
       - name: Static analysis
         shell: pwsh
