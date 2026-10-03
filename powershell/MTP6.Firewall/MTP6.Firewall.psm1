@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-function Get-MTP6FirewallAdapterMetadata {
+function Get-MTP6FirewallAdapterInfo {
     [CmdletBinding()]
     param()
 
@@ -11,4 +11,4 @@ function Get-MTP6FirewallAdapterMetadata {
     }
 }
 
-Export-ModuleMember -Function Get-MTP6FirewallAdapterMetadata
+Export-ModuleMember -Function Get-MTP6FirewallAdapterInfo
