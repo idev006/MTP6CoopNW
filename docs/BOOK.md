@@ -286,6 +286,24 @@
 - Production monitoring
 - Diagnostics bundle
 
+
+### บทที่ 20 — Agile Kanban Project Management
+ไฟล์: [19_AGILE_KANBAN_PROJECT_MANAGEMENT.md](19_AGILE_KANBAN_PROJECT_MANAGEMENT.md)
+
+หัวข้อหลัก:
+- Kanban Board Columns
+- WIP Limits
+- Classes of Service
+- Priority
+- Definition of Ready / Done
+- Flow Policies
+- Cadence
+- Kanban Metrics
+- Epic / Milestone Flow
+- Critical Path
+- Branch / PR Policy
+- Release Policy
+
 ## ภาคผนวก
 
 ### Appendix A — Architecture Decision Records
