@@ -4,7 +4,6 @@ import pathlib
 
 from mtp6coopnw.agent import load_agent_settings
 
-
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 
