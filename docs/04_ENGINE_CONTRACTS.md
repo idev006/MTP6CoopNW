@@ -1,13 +1,14 @@
 # 04 — Engine Contracts
 
 ## Contract Philosophy
-Engine เป็น authoritative control logic ของระบบ UI ทุกชนิดต้องเรียกผ่าน Application/Engine contract เดียวกัน
+Engine/Core เป็น authoritative control logic ของระบบ UI ทุกชนิดต้องเรียกผ่าน Application/Control contract เดียวกัน และ local Agent ต้อง enforce เฉพาะ command/policy ที่ผ่าน validation/authentication
 
 ## Common Result Contract
-ทุก command ควรคืนข้อมูลเชิงโครงสร้างอย่างน้อย:
-- success: boolean
-- operation: string
-- target: string
+ทุก command ควรคืนข้อมูลอย่างน้อย:
+- success
+- operation
+- target
+- policyRevision
 - stateBefore
 - stateAfter
 - checks[]
@@ -16,99 +17,172 @@ Engine เป็น authoritative control logic ของระบบ UI ทุ�
 - timestamp
 - correlationId
 
-Engine ห้ามพึ่งสี console, message box หรือ UI-specific object
+## Common Host Status Contract
+อย่างน้อย:
+- hostId
+- online
+- lastHeartbeat
+- effectiveState
+- policyRevision
+- scheduleState
+- internetAllowed / internetActual
+- databaseAllowed / databaseActual
+- managedPorts[]
+- alarms[]
+- lastCommand
+
+## PolicyEngine
+Responsibilities:
+- Validate policy
+- Resolve priority
+- Resolve manual override vs schedule
+- Produce effective desired state
+- Version policies
+
+Suggested operations:
+- GetEffectivePolicy(hostId)
+- SetHostEnabled(hostId, enabled)
+- SetUsageSchedule(hostId, schedule)
+- SetInternetPolicy(hostId, policy)
+- SetDatabasePolicy(hostId, policy)
+- SetPortPolicy(hostId, rules)
+
+## SchedulerEngine
+Responsibilities:
+- Evaluate per-host schedules
+- Trigger desired-state reevaluation at boundaries
+- Handle timezone and restart recovery
+
+Suggested operations:
+- ValidateSchedule()
+- GetScheduleState(hostId)
+- GetNextTransition(hostId)
+- EvaluateNow(hostId)
 
 ## NetworkEngine
 Responsibilities:
 - Read adapter/IP/subnet/gateway/DNS state
 - Validate target adapter
-- Build route/gateway change plan
-- Apply approved network changes
+- Build network change plan
+- Apply approved changes
 - Verify LAN state
 - Restore prior state when rollback is required
 
-Suggested operations:
-- GetNetworkState()
-- ValidateNetworkConfig(config)
-- SetServerNormalNetwork()
-- SetServerMaintenanceNetwork()
-- ConfigureClient(clientId)
-
 ## FirewallEngine
 Responsibilities:
-- Inspect managed firewall rules
-- Create/update/remove only project-owned rules
+- Inspect project-owned managed firewall rules
+- Apply Internet/DB/port policy
 - Restrict SQL inbound sources
-- Verify effective rule state
+- Detect drift
+- Converge actual rules toward desired policy
 
 Suggested operations:
 - GetFirewallState()
-- EnsureSqlInboundRule()
-- VerifySqlExposure()
-
-Rule ownership: project-created rulesต้องมี stable naming/prefix เช่น MTP6CoopNW-
+- EnsureInternetPolicy()
+- EnsureDatabasePolicy()
+- EnsurePortPolicy()
+- DetectDrift()
 
 ## SqlEngine
 Responsibilities:
 - Discover SQL-related Windows services
 - Check service state
-- Check configured/listening TCP port where possible
-- Test TCP/SQL connectivity without modifying business data
+- Test configured/listening TCP port
+- Test DB connectivity without modifying business data
+
+## AccessControlEngine
+Responsibilities:
+- Resolve whether host is currently allowed
+- Apply host-level enabled/disabled state through approved mechanisms
+- Never bypass safety/control channel requirements
+
+## AgentEngine
+Responsibilities:
+- Receive authenticated policy/command
+- Persist last-known valid policy
+- Enforce effective desired state
+- Collect telemetry
+- Send heartbeat
+- Reconcile desired vs actual state
+- Return structured command results
 
 Suggested operations:
-- GetSqlState()
-- TestSqlPort()
-- TestDatabaseConnection()
+- Register()
+- ApplyPolicy(revision)
+- GetLocalState()
+- Reconcile()
+- Heartbeat()
+- SelfTest()
+
+## TelemetryEngine
+Responsibilities:
+- Aggregate state changes
+- Publish heartbeat/status
+- Normalize module telemetry
+- Detect stale/offline agents
 
 ## MaintenanceEngine
-Responsibilities:
-Orchestrate state transitions โดยใช้ NetworkEngine, FirewallEngine, DiagnosticsEngine และ AuditEngine
-
-Suggested operations:
-- GetMode()
-- EnableMaintenanceMode()
-- DisableMaintenanceMode()
-
-MaintenanceEngine ต้องไม่ duplicate low-level network implementation
+Orchestrate Normal/Maintenance transitions using Policy, Network, Firewall, Diagnostics and Audit engines
 
 ## DiagnosticsEngine
-Responsibilities:
-- Run non-destructive checks
-- LAN reachability
-- Router reachability
-- SQL port reachability
-- DNS resolution
-- Internet reachability
-- Disk/service/basic health checks
+Run non-destructive checks:
+- LAN
+- Router
+- SQL port
+- DNS
+- Internet
+- firewall policy
+- schedule state
+- agent health
+- disk/service health
 
 ## BackupEngine
-v1 เน้น visibility/verification ก่อน automation:
+v1:
 - Detect latest known backup
 - Report age/status
 - Validate configured backup path
 
-ห้ามลบ backup อัตโนมัติใน v1
-
 ## AuditEngine
-Responsibilities:
-- Write append-oriented operation records
-- Include before/after/checks/result
-- Avoid secrets/passwords/tokens in logs
+- append-oriented operation records
+- include policy revision, before/after/checks/result
+- avoid secrets/passwords/tokens
+
+## Communication Contract
+Control Core ↔ Agent ต้องรองรับ:
+- command request
+- command acknowledgement
+- command result
+- policy update
+- heartbeat
+- state snapshot
+- state-change event
+- alarm event
+
+Transport ต้อง replaceable โดย semantic contract ไม่เปลี่ยน
 
 ## Idempotency Rules
-- EnableMaintenance เมื่ออยู่ Maintenance แล้วต้อง return success/no-change หรือ equivalent
-- DisableMaintenance เมื่ออยู่ Normal แล้วต้อง return success/no-change
-- EnsureFirewallRule ต้อง converge ไป desired state ไม่สร้าง rule ซ้ำ
-- ConfigureClient ต้องตรวจ current state ก่อนเปลี่ยน
+- SetHostEnabled(same value) = no harmful change
+- SetInternetPolicy(same policy) = converge/no duplicate rules
+- SetDatabasePolicy(same policy) = converge/no duplicate rules
+- EnsurePortPolicy = desired-state convergence
+- ApplyPolicy(same revision) = safe no-op/reconcile
+- Maintenance enable/disable = repeat-safe
 
 ## Error Categories
-อย่างน้อยควรแยก:
+อย่างน้อย:
 - VALIDATION_ERROR
 - PRIVILEGE_REQUIRED
+- AUTHENTICATION_FAILED
+- AUTHORIZATION_FAILED
 - CONFIG_ERROR
+- POLICY_CONFLICT
+- POLICY_STALE
+- AGENT_OFFLINE
 - NETWORK_APPLY_FAILED
 - NETWORK_VERIFY_FAILED
 - FIREWALL_FAILED
 - SQL_UNREACHABLE
+- SCHEDULE_INVALID
+- DRIFT_DETECTED
 - ROLLBACK_FAILED
 - UNKNOWN_ERROR
