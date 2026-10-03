@@ -228,3 +228,34 @@ Dashboard ควรแสดงอย่างน้อย:
 
 ## Future Compatibility
 Transport, UI และ platform adapter สามารถเปลี่ยนได้โดยไม่เปลี่ยน policy semantics หรือ module contracts
+
+
+## State / Stage / Cycle Model
+
+MTP6CoopNW แยกสามแนวคิดอย่างชัดเจน:
+
+### State
+สถานะคงอยู่ของ host/subsystem เช่น NORMAL, DISABLED, MAINTENANCE, FAULT
+
+### Stage
+ขั้นของ operation ปัจจุบัน เช่น REQUESTED → VALIDATING → PLANNING → APPLYING → VERIFYING → COMPLETED
+
+Failure path:
+FAILED → ROLLING_BACK → ROLLED_BACK หรือ ROLLBACK_FAILED
+
+Additional terminal stages:
+- CANCELLED
+- TIMED_OUT
+
+### Cycle
+วงรอบควบคุมที่ทำซ้ำ:
+Read Policy → Read Actual → Evaluate Schedule → Resolve Effective Policy → Compare → Interlock → Reconcile → Verify → Publish → Audit/Alarm → Wait
+
+### Fast / Slow Cycle
+Fast cycle ใช้กับ heartbeat, command result, critical state และ policy revision
+Slow cycle ใช้กับ drift, SQL/service health, disk, backup และ diagnostics เชิงลึก
+
+ทุก interval ต้อง configurable และ testable ผ่าน ClockPort/FakeClock.
+
+### Stage Timeout
+ทุก stage ที่รอ external effect ต้องมี timeout ที่กำหนดได้ และ timeout ต้องแปลงเป็น explicit stage/error ไม่ถือเป็น success.
