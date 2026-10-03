@@ -247,6 +247,19 @@
 - Scope guardrails
 - Acceptance rule
 
+### บทที่ 16 — Implementation Plan, Configuration, Monitoring & Testability
+ไฟล์: [15_IMPLEMENTATION_PLAN.md](15_IMPLEMENTATION_PLAN.md)
+
+หัวข้อหลัก:
+- Single Point of Control / Single Pane of Glass
+- User-friendly control
+- TOML-first configuration
+- Monitoring & Observability
+- Test-friendly architecture
+- CI pipeline
+- Work packages
+- Definition of Ready / Done
+
 ## ภาคผนวก
 
 ### Appendix A — Architecture Decision Records
