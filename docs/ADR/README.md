@@ -9,3 +9,5 @@ ADR ใช้บันทึกการตัดสินใจด้าน arc
 
 ## Index
 - [ADR-001 — Document First, Engine First, Replaceable UI](ADR-001-DOCUMENT-FIRST-ENGINE-FIRST.md)
+- [ADR-002 — Industrial Control Dashboard and Process-Oriented State Model](ADR-002-INDUSTRIAL-CONTROL-DASHBOARD.md)
+- [ADR-003 — Distributed Policy Enforcement with Per-Host Agent](ADR-003-DISTRIBUTED-POLICY-AGENT.md)
