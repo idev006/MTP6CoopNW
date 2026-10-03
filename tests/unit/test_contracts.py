@@ -13,7 +13,6 @@ from mtp6coopnw.contracts import (
     OperationStatus,
 )
 
-
 NOW = datetime(2026, 10, 3, 6, 0, tzinfo=UTC)
 
 
