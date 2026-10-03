@@ -20,6 +20,10 @@ class SqlPort(Protocol):
     def get_state(self) -> dict[str, Any]: ...
 
 
+class ServicePort(Protocol):
+    def get_state(self) -> dict[str, Any]: ...
+
+
 class PolicyStore(Protocol):
     def get(self, host_id: str) -> dict[str, Any] | None: ...
 
