@@ -18,7 +18,6 @@ from mtp6coopnw.testing import (
     InMemoryPolicyStore,
 )
 
-
 NOW = datetime(2026, 10, 3, 10, 0, tzinfo=UTC)
 
 
