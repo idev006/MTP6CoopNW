@@ -13,7 +13,6 @@ from mtp6coopnw.config import (
     validate_policy_config,
 )
 
-
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 
