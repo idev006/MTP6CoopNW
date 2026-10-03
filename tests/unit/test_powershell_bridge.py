@@ -70,6 +70,8 @@ def test_bridge_surfaces_powershell_failure(tmp_path: pathlib.Path) -> None:
         stderr="adapter failed",
     )
 
-    with patch("subprocess.run", return_value=completed):
-        with pytest.raises(PowerShellBridgeError, match="adapter failed"):
-            bridge.invoke("network.state")
+    with (
+        patch("subprocess.run", return_value=completed),
+        pytest.raises(PowerShellBridgeError, match="adapter failed"),
+    ):
+        bridge.invoke("network.state")
