@@ -1,0 +1,23 @@
+schema_version = 1
+
+[agent]
+host_id = "CLIENT-01"
+role = "client"
+reconcile_seconds = 5
+
+[core]
+url = "https://192.168.1.101:8443"
+
+[local_policy]
+path = "data/policy.toml"
+fail_safe = "last_known_valid"
+
+[adapters]
+network = "windows-powershell"
+firewall = "windows-powershell"
+services = "windows-powershell"
+sql = "windows-powershell"
+
+[logging]
+level = "INFO"
+format = "json"
