@@ -1,0 +1,32 @@
+schema_version = 1
+
+[core]
+node_id = "MTP6-CTRL-01"
+timezone = "Asia/Bangkok"
+
+[telemetry]
+heartbeat_seconds = 3
+stale_after_seconds = 10
+offline_after_seconds = 30
+
+[cycles]
+fast_seconds = 3
+slow_seconds = 60
+reconcile_seconds = 5
+
+[timeouts]
+validate_seconds = 10
+plan_seconds = 10
+apply_seconds = 30
+verify_seconds = 20
+rollback_seconds = 30
+approval_seconds = 300
+
+[transport]
+mode = "https"
+bind = "0.0.0.0"
+port = 8443
+
+[logging]
+level = "INFO"
+format = "json"
