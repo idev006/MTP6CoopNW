@@ -1,0 +1,25 @@
+schema_version = 1
+policy_revision = 1
+
+[host]
+enabled = true
+
+[internet]
+allowed = true
+
+[database]
+allowed = true
+server = "192.168.1.10"
+port = 1433
+
+[[schedule]]
+days = ["mon", "tue", "wed", "thu", "fri"]
+start = "08:00"
+end = "17:00"
+timezone = "Asia/Bangkok"
+
+[[ports.allow]]
+protocol = "tcp"
+remote_port = 1433
+remote_address = "192.168.1.10"
+purpose = "SQL Server"
