@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+
+      - name: Ruff
+        run: ruff check src tests
+
+      - name: Mypy
+        run: mypy
+
+      - name: Unit tests
+        run: pytest -m "not destructive" --cov=mtp6coopnw --cov-report=term-missing
+
+      - name: Validate example TOML
+        shell: python
+        run: |
+          from pathlib import Path
+          import tomllib
+          paths = sorted(Path("config").glob("*.example.toml"))
+          assert paths
+          for path in paths:
+              with path.open("rb") as handle:
+                  data = tomllib.load(handle)
+              assert data["schema_version"] == 1, path
+              print("OK", path)
+
+  powershell:
+    name: PowerShell checks
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install test tools
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Static analysis
+        shell: pwsh
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path powershell -Recurse -Severity Warning,Error
+          $results | Format-Table
+          if ($results) { throw "PSScriptAnalyzer reported findings." }
+
+      - name: Pester
+        shell: pwsh
+        run: Invoke-Pester -Path tests/powershell -CI
+
+      - name: Destructive guard
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem powershell -Recurse -File -Filter *.psm1
+          $text = ($files | Get-Content -Raw) -join [Environment]::NewLine
+          $forbidden = @(
+            'New-NetFirewallRule',
+            'Set-NetFirewallRule',
+            'Remove-NetFirewallRule',
+            'New-NetRoute',
+            'Remove-NetRoute',
+            'New-NetIPAddress',
+            'Set-NetIPInterface',
+            'Disable-NetAdapter'
+          )
+          foreach ($command in $forbidden) {
+            if ($text -match [regex]::Escape($command)) {
+              throw "M0 guard: destructive command found: $command"
+            }
+          }

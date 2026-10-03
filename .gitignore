@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.venv/
+venv/
+
+# Build/package
+build/
+dist/
+*.whl
+
+# Runtime / local state
+logs/
+data/
+runtime/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Local configuration and secrets
+config/*.toml
+!config/*.example.toml
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Windows / editors
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Test artifacts
+test-results/
+artifacts/
