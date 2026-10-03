@@ -24,7 +24,7 @@ Describe 'MTP6.Network read-only adapter' {
         $result.InterfaceIndex | Should -Be 4
         $result.IPv4Address | Should -Contain '192.168.1.101'
         $result.IPv4DefaultGateway | Should -Contain '192.168.1.1'
-        Assert-MockCalled Get-NetIPConfiguration -ModuleName MTP6.Network -Times 1
+        Should -Invoke Get-NetIPConfiguration -ModuleName MTP6.Network -Times 1
     }
 
     It 'returns structured route state' {
