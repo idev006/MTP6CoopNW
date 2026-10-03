@@ -12,3 +12,5 @@ ADR เป็นภาคผนวกของ Project Book ใช้บัน�
 - [ADR-002 — Industrial Control Dashboard and Process-Oriented State Model](ADR-002-INDUSTRIAL-CONTROL-DASHBOARD.md)
 - [ADR-003 — Distributed Policy Enforcement with Per-Host Agent](ADR-003-DISTRIBUTED-POLICY-AGENT.md)
 - [ADR-004 — Python Control Core with PowerShell Windows Adapters](ADR-004-PYTHON-CORE-POWERSHELL-ADAPTERS.md)
+
+- [ADR-005 — TOML-First Configuration, Central Monitoring and Automation-Friendly Design](ADR-005-TOML-CENTRAL-MONITORING-AUTOMATION.md)
