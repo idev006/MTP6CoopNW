@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
+from mtp6coopnw.observability import EventRecord, MetricRegistry
 from mtp6coopnw.testing.fakes import (
     FakeClock,
     FakeFirewallAdapter,
@@ -46,6 +47,8 @@ class SimulationRuntime:
     policy_store: InMemoryPolicyStore = field(default_factory=InMemoryPolicyStore)
     audit_store: InMemoryAuditStore = field(default_factory=InMemoryAuditStore)
     transport: FakeTransport = field(default_factory=FakeTransport)
+    metrics: MetricRegistry = field(default_factory=MetricRegistry)
+    events: list[EventRecord] = field(default_factory=list)
     hosts: dict[str, SimulatedHost] = field(default_factory=dict)
 
     def add_host(self, host: SimulatedHost) -> None:
@@ -60,13 +63,15 @@ class SimulationRuntime:
 
         now = self.clock.now()
         host.last_heartbeat = now
-        event = {
-            "event": "agent.heartbeat",
-            "host_id": host_id,
-            "timestamp": now.isoformat(),
-        }
-        self.audit_store.append(event)
-        self.transport.send("CORE", event)
+        event = EventRecord(
+            event="agent.heartbeat",
+            timestamp=now,
+            component="simulation",
+            host_id=host_id,
+            result="SUCCESS",
+        )
+        self._record(event)
+        self.metrics.increment("agent.heartbeat.count")
         return host.snapshot()
 
     def apply_access(
@@ -89,15 +94,17 @@ class SimulationRuntime:
         )
         after = host.firewall.get_state()
 
-        event = {
-            "event": "simulation.access_applied",
-            "host_id": host_id,
-            "timestamp": self.clock.now().isoformat(),
-            "before": before,
-            "after": after,
-        }
-        self.audit_store.append(event)
-        self.transport.send("CORE", event)
+        event = EventRecord(
+            event="simulation.access_applied",
+            timestamp=self.clock.now(),
+            component="simulation",
+            host_id=host_id,
+            operation="ApplyAccess",
+            result="SUCCESS",
+            data={"before": before, "after": after},
+        )
+        self._record(event)
+        self.metrics.increment("simulation.access_applied.count")
         return host.snapshot()
 
     def set_sql_reachable(self, host_id: str, reachable: bool) -> None:
@@ -105,3 +112,9 @@ class SimulationRuntime:
 
     def set_host_online(self, host_id: str, online: bool) -> None:
         self.hosts[host_id].online = online
+
+    def _record(self, event: EventRecord) -> None:
+        payload = event.to_dict()
+        self.events.append(event)
+        self.audit_store.append(payload)
+        self.transport.send("CORE", payload)

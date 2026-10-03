@@ -76,3 +76,13 @@ def test_policy_store_uses_copy_semantics(runtime: SimulationRuntime) -> None:
     stored = runtime.policy_store.get("CLIENT-01")
     assert stored is not None
     assert stored["internet"]["allowed"] is False
+
+
+@pytest.mark.scenario
+def test_simulation_emits_structured_events_and_metrics(runtime: SimulationRuntime) -> None:
+    runtime.heartbeat("CLIENT-01")
+    runtime.apply_access("CLIENT-01", internet_allowed=False)
+
+    assert runtime.events[-1].event == "simulation.access_applied"
+    assert runtime.metrics.counters["agent.heartbeat.count"] == 1
+    assert runtime.metrics.counters["simulation.access_applied.count"] == 1
