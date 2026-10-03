@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-function Get-MTP6SqlAdapterMetadata {
+function Get-MTP6SqlAdapterInfo {
     [CmdletBinding()]
     param()
 
@@ -11,4 +11,4 @@ function Get-MTP6SqlAdapterMetadata {
     }
 }
 
-Export-ModuleMember -Function Get-MTP6SqlAdapterMetadata
+Export-ModuleMember -Function Get-MTP6SqlAdapterInfo
