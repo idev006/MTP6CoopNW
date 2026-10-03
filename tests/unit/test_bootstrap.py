@@ -5,7 +5,6 @@ import tomllib
 
 import mtp6coopnw
 
-
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 
