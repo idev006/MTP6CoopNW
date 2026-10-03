@@ -6,7 +6,6 @@ import pytest
 
 from mtp6coopnw.testing import FakeClock, SimulatedHost, SimulationRuntime
 
-
 NOW = datetime(2026, 10, 3, 7, 0, tzinfo=UTC)
 
 
