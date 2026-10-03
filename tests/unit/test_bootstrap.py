@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import pathlib
 import tomllib
-from pathlib import Path
 
 import mtp6coopnw
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 
 def test_package_has_version() -> None:
