@@ -89,10 +89,27 @@ def test_adapter_failure_produces_degraded_snapshot() -> None:
     assert transport.sent[-1][1]["result"] == "DEGRADED"
 
 
-def test_run_once_heartbeats_only_when_read_only_reconcile_is_healthy() -> None:
+def test_run_once_reports_healthy_snapshot() -> None:
     agent, transport, _, _ = _agent()
 
     snapshot = agent.run_once()
 
     assert snapshot.healthy is True
     assert transport.sent[-1][1]["event"] == "agent.heartbeat"
+    assert transport.sent[-1][1]["result"] == "SUCCESS"
+    assert transport.sent[-1][1]["data"]["snapshot"]["healthy"] is True
+
+
+def test_run_once_reports_degraded_snapshot_when_adapter_fails() -> None:
+    agent, transport, audit, _ = _agent()
+    agent.sql = FailingSqlAdapter()
+
+    snapshot = agent.run_once()
+
+    assert snapshot.healthy is False
+    assert "sql:RuntimeError" in snapshot.errors
+    assert transport.sent[-1][1]["event"] == "agent.heartbeat"
+    assert transport.sent[-1][1]["result"] == "DEGRADED"
+    assert transport.sent[-1][1]["data"]["snapshot"]["healthy"] is False
+    assert audit.events[-1]["event"] == "agent.heartbeat"
+    assert agent.metrics.counters["agent.heartbeat.count"] == 1
