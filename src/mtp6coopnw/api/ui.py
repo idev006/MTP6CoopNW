@@ -100,7 +100,22 @@ class UiApplicationFacade:
             if healthy is True
             else ("DEGRADED" if healthy is False else "UNKNOWN")
         )
-        actionable = freshness == "ONLINE" and healthy is not False
+        actionable = freshness == "ONLINE" and healthy is True
+        snapshot = host.get("snapshot")
+        control = {}
+        if isinstance(snapshot, dict):
+            value = snapshot.get("control")
+            if isinstance(value, dict):
+                control = {
+                    "hostEnabled": bool(value.get("hostEnabled", True)),
+                    "internetAllowed": bool(value.get("internetAllowed", False)),
+                    "databaseAllowed": bool(value.get("databaseAllowed", False)),
+                    "allowedPorts": [
+                        int(port)
+                        for port in value.get("allowedPorts", [])
+                        if isinstance(port, int) and not isinstance(port, bool)
+                    ],
+                }
         return {
             "hostId": host["hostId"],
             "role": host["role"],
@@ -109,11 +124,12 @@ class UiApplicationFacade:
             "policyRevision": host["policyRevision"],
             "lastHeartbeat": host["lastHeartbeat"],
             "alarmCount": alarm_count,
+            "control": control,
             "actions": {
                 "canViewDetails": True,
                 "canPlan": actionable,
                 "canApply": actionable,
                 "canRetry": freshness in {"STALE", "OFFLINE"} or healthy is False,
-                "canEnterMaintenance": freshness == "ONLINE",
+                "canEnterMaintenance": freshness == "ONLINE" and healthy is True,
             },
         }

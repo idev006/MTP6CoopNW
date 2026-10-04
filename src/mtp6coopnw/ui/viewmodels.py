@@ -12,11 +12,15 @@ class HostCardViewModel:
     health: str
     policy_revision: int | None
     alarm_count: int
+    control: dict[str, Any]
     actions: dict[str, bool]
 
     @classmethod
     def from_payload(cls, payload: dict[str, Any]) -> "HostCardViewModel":
         revision = payload.get("policyRevision")
+        control = payload.get("control", {})
+        if not isinstance(control, dict):
+            control = {}
         return cls(
             host_id=str(payload["hostId"]),
             role=str(payload["role"]),
@@ -24,6 +28,7 @@ class HostCardViewModel:
             health=str(payload["health"]),
             policy_revision=revision if isinstance(revision, int) else None,
             alarm_count=int(payload.get("alarmCount", 0)),
+            control=dict(control),
             actions={
                 str(key): bool(value)
                 for key, value in dict(payload.get("actions", {})).items()
