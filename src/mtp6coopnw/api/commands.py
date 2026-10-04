@@ -2,29 +2,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Protocol
+from typing import Any
 
+from mtp6coopnw.application import AuditSink, CommandExecutionService
 from mtp6coopnw.security.access import ActorContext, authorize
 from mtp6coopnw.security.audit import mutation_audit
 
 
-class AuditSink(Protocol):
-    def append(self, event: dict[str, Any]) -> None: ...
-
-
-class CommandExecutor(Protocol):
-    def apply(
-        self,
-        *,
-        host_id: str,
-        desired: dict[str, Any],
-        now: datetime,
-    ) -> dict[str, Any]: ...
-
-
 @dataclass(slots=True)
 class NetworkControlFacade:
-    executor: CommandExecutor
+    """Presentation command facade. Domain decisions remain below this boundary."""
+
+    executor: CommandExecutionService
     audit: AuditSink
 
     def set_host_enabled(
@@ -111,9 +100,9 @@ class NetworkControlFacade:
             action=action,
             host_id=host_id,
             now=now,
-            result=str(result.get("stage", "UNKNOWN")),
-            operation_id=result.get("operationId"),
+            result=result.stage,
+            operation_id=result.operation_id,
             details={"desired": desired},
         )
         self.audit.append(event.to_dict())
-        return result
+        return result.to_dict()

@@ -5,6 +5,7 @@ from datetime import UTC, date, datetime, timedelta
 import pytest
 
 from mtp6coopnw.api.commands import NetworkControlFacade
+from mtp6coopnw.application import CommandExecutionResult, ControlState
 from mtp6coopnw.core.alarm_lifecycle import AlarmLifecycleStore
 from mtp6coopnw.network import Direction, NetworkPolicy, PortRule, Protocol
 from mtp6coopnw.operations.idempotency import IdempotencyStore
@@ -270,7 +271,21 @@ class _Executor:
         now: datetime,
     ) -> dict[str, object]:
         self.calls.append((host_id, desired, now))
-        return {"operationId": "op-1", "stage": "COMPLETED"}
+        return CommandExecutionResult(
+            operation_id="op-1",
+            stage="COMPLETED",
+            rolled_back=False,
+            error=None,
+            policy_revision=1,
+            state=ControlState(
+                host_enabled=True,
+                internet_allowed=True,
+                database_allowed=True,
+                allowed_ports=(),
+                lan_reachable=True,
+                control_reachable=True,
+            ),
+        )
 
 
 def test_command_facade_controls_host_internet_database_and_ports_with_audit() -> None:

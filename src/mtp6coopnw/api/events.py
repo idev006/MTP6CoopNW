@@ -4,16 +4,16 @@ import json
 from dataclasses import dataclass
 from typing import Any, Iterator
 
-from mtp6coopnw.api.facade import ReadOnlyControlFacade
-from mtp6coopnw.observability import ApplicationEvent, InMemoryEventBus
+from mtp6coopnw.application import EventStream, StatusQueryService
+from mtp6coopnw.observability import ApplicationEvent
 
 
 @dataclass(slots=True)
 class UiEventGateway:
     """Snapshot plus event-delta boundary for reactive UI adapters."""
 
-    status: ReadOnlyControlFacade
-    events: InMemoryEventBus
+    status: StatusQueryService
+    events: EventStream
 
     def bootstrap(self) -> dict[str, Any]:
         snapshot = self.status.system_status()
@@ -40,7 +40,7 @@ class UiEventGateway:
 class SseEventGateway:
     """Server-Sent Events adapter with sequence IDs and reconnect support."""
 
-    events: InMemoryEventBus
+    events: EventStream
 
     def stream(
         self,

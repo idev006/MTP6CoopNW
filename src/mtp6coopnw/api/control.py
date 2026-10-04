@@ -4,19 +4,24 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+from mtp6coopnw.application import (
+    OperationService,
+    PlanningService,
+    PolicyEvaluationService,
+)
 from mtp6coopnw.observability import EventPublisher
-from mtp6coopnw.operations import ActualState, MutableHost, OperationEngine, Planner
-from mtp6coopnw.policy import PolicyDecision, PolicyEngine, ScheduleRule
+from mtp6coopnw.operations import ActualState, MutableHost
+from mtp6coopnw.policy import PolicyDecision, ScheduleRule
 from mtp6coopnw.reconciliation import detect_drift
 
 
 @dataclass(slots=True)
 class ControlApplicationFacade:
-    """UI-independent facade for preview, plan, apply and reconcile use cases."""
+    """Headless application facade for preview, planning and reconciliation."""
 
-    policy_engine: PolicyEngine
-    planner: Planner
-    operation_engine: OperationEngine
+    policy_engine: PolicyEvaluationService
+    planner: PlanningService
+    operation_engine: OperationService
     event_publisher: EventPublisher | None = None
 
     def preview(

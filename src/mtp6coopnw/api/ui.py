@@ -1,37 +1,46 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
-from mtp6coopnw.api.events import UiEventGateway
-from mtp6coopnw.api.facade import ReadOnlyControlFacade
+from mtp6coopnw.application import StatusQueryService, UiEventService
+from mtp6coopnw.ui.contracts import (
+    ActionAvailabilityPayload,
+    ControlStatePayload,
+    DashboardPayload,
+    DashboardSummaryPayload,
+    HostCardPayload,
+    UiEventBatchPayload,
+    UiEventPayload,
+)
 
 
 @dataclass(slots=True)
 class UiApplicationFacade:
-    """Presentation-ready facade.
+    """Presentation-oriented facade with no dependency on concrete engines."""
 
-    Concrete UI code receives stable DTO-like dictionaries and does not import
-    Core/Engine types. Action flags are presentation hints only; command handlers
-    must still revalidate authorization and safety interlocks.
-    """
+    status: StatusQueryService
+    events: UiEventService
 
-    status: ReadOnlyControlFacade
-    events: UiEventGateway
-
-    def bootstrap_dashboard(self) -> dict[str, Any]:
+    def bootstrap_dashboard(self) -> DashboardPayload:
         raw = self.events.bootstrap()
-        snapshot = raw["snapshot"]
-        alarm_counts = self._alarm_counts(snapshot["alarms"])
+        snapshot = cast(dict[str, Any], raw["snapshot"])
+        alarms = cast(list[dict[str, Any]], snapshot["alarms"])
+        alarm_counts = self._alarm_counts(alarms)
         hosts = [
             self._host_card(host, alarm_counts.get(str(host["hostId"]), 0))
-            for host in snapshot["hosts"]
+            for host in cast(list[dict[str, Any]], snapshot["hosts"])
         ]
+        raw_summary = cast(dict[str, Any], snapshot["summary"])
+        summary: DashboardSummaryPayload = {
+            "hostCount": int(raw_summary.get("hostCount", len(hosts))),
+            "activeAlarmCount": int(raw_summary.get("activeAlarmCount", len(alarms))),
+        }
         return {
             "hosts": hosts,
-            "alarms": snapshot["alarms"],
-            "summary": snapshot["summary"],
-            "latestSequence": raw["latestSequence"],
+            "alarms": alarms,
+            "summary": summary,
+            "latestSequence": int(raw["latestSequence"]),
         }
 
     def next_ui_events(
@@ -40,17 +49,21 @@ class UiApplicationFacade:
         after_sequence: int,
         timeout_seconds: float = 30.0,
         limit: int = 100,
-    ) -> dict[str, Any]:
+    ) -> UiEventBatchPayload:
         batch = self.events.next_events(
             after_sequence=after_sequence,
             timeout_seconds=timeout_seconds,
             limit=limit,
         )
-        if batch["resyncRequired"]:
-            return batch
+        if bool(batch["resyncRequired"]):
+            return {
+                "events": [],
+                "latestSequence": int(batch["latestSequence"]),
+                "resyncRequired": True,
+            }
 
-        enriched: list[dict[str, Any]] = []
-        for raw_event in batch["events"]:
+        enriched: list[UiEventPayload] = []
+        for raw_event in cast(list[dict[str, Any]], batch["events"]):
             event = dict(raw_event)
             host_id = event.get("hostId")
             if isinstance(host_id, str) and self._needs_host_projection(event):
@@ -66,11 +79,11 @@ class UiApplicationFacade:
                     data = dict(event.get("data", {}))
                     data["hostCard"] = self._host_card(host, alarm_count)
                     event["data"] = data
-            enriched.append(event)
+            enriched.append(cast(UiEventPayload, event))
 
         return {
             "events": enriched,
-            "latestSequence": batch["latestSequence"],
+            "latestSequence": int(batch["latestSequence"]),
             "resyncRequired": False,
         }
 
@@ -92,7 +105,7 @@ class UiApplicationFacade:
         return counts
 
     @staticmethod
-    def _host_card(host: dict[str, Any], alarm_count: int) -> dict[str, Any]:
+    def _host_card(host: dict[str, Any], alarm_count: int) -> HostCardPayload:
         freshness = str(host["freshness"])
         healthy = host["healthy"]
         health = (
@@ -101,8 +114,13 @@ class UiApplicationFacade:
             else ("DEGRADED" if healthy is False else "UNKNOWN")
         )
         actionable = freshness == "ONLINE" and healthy is True
+        control: ControlStatePayload = {
+            "hostEnabled": True,
+            "internetAllowed": False,
+            "databaseAllowed": False,
+            "allowedPorts": [],
+        }
         snapshot = host.get("snapshot")
-        control = {}
         if isinstance(snapshot, dict):
             value = snapshot.get("control")
             if isinstance(value, dict):
@@ -116,20 +134,26 @@ class UiApplicationFacade:
                         if isinstance(port, int) and not isinstance(port, bool)
                     ],
                 }
+
+        actions: ActionAvailabilityPayload = {
+            "canViewDetails": True,
+            "canPlan": actionable,
+            "canApply": actionable,
+            "canRetry": freshness in {"STALE", "OFFLINE"} or healthy is False,
+            "canEnterMaintenance": freshness == "ONLINE" and healthy is True,
+        }
+        revision = host.get("policyRevision")
+        last_heartbeat = host.get("lastHeartbeat")
         return {
-            "hostId": host["hostId"],
-            "role": host["role"],
+            "hostId": str(host["hostId"]),
+            "role": str(host["role"]),
             "freshness": freshness,
             "health": health,
-            "policyRevision": host["policyRevision"],
-            "lastHeartbeat": host["lastHeartbeat"],
+            "policyRevision": revision if isinstance(revision, int) else None,
+            "lastHeartbeat": (
+                str(last_heartbeat) if last_heartbeat is not None else None
+            ),
             "alarmCount": alarm_count,
             "control": control,
-            "actions": {
-                "canViewDetails": True,
-                "canPlan": actionable,
-                "canApply": actionable,
-                "canRetry": freshness in {"STALE", "OFFLINE"} or healthy is False,
-                "canEnterMaintenance": freshness == "ONLINE" and healthy is True,
-            },
+            "actions": actions,
         }
