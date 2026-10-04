@@ -25,7 +25,16 @@ class CentralAlarm:
 def alarms_for_host(view: HostView) -> tuple[CentralAlarm, ...]:
     alarms: list[CentralAlarm] = []
 
-    if view.freshness is FreshnessState.STALE:
+    if view.freshness is FreshnessState.UNKNOWN:
+        alarms.append(
+            CentralAlarm(
+                host_id=view.host_id,
+                code="AGENT_NEVER_SEEN",
+                severity="WARNING",
+                message="Registered agent has not reported a heartbeat.",
+            )
+        )
+    elif view.freshness is FreshnessState.STALE:
         alarms.append(
             CentralAlarm(
                 host_id=view.host_id,
@@ -44,7 +53,16 @@ def alarms_for_host(view: HostView) -> tuple[CentralAlarm, ...]:
             )
         )
 
-    if view.healthy is False:
+    if view.freshness is not FreshnessState.UNKNOWN and view.healthy is None:
+        alarms.append(
+            CentralAlarm(
+                host_id=view.host_id,
+                code="AGENT_HEALTH_UNKNOWN",
+                severity="WARNING",
+                message="Agent heartbeat did not report a valid health state.",
+            )
+        )
+    elif view.healthy is False:
         alarms.append(
             CentralAlarm(
                 host_id=view.host_id,
