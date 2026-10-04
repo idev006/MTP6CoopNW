@@ -1,5 +1,8 @@
-"""Programmatic API facades for replaceable user interfaces."""
+"""Programmatic facades for replaceable user interfaces."""
 
-from mtp6coopnw.api.read_only import ReadOnlyControlApi
+from mtp6coopnw.api.facade import ReadOnlyControlFacade
 
-__all__ = ["ReadOnlyControlApi"]
+# Backward-compatible name retained while presentation code migrates to "Facade".
+ReadOnlyControlApi = ReadOnlyControlFacade
+
+__all__ = ["ReadOnlyControlApi", "ReadOnlyControlFacade"]
