@@ -341,3 +341,9 @@ Before merge:
 - Has the Project Book/ADR been updated if architecture changed?
 
 Any "yes" to a forbidden dependency or "no" to a mandatory safety/testability item blocks acceptance unless explicitly waived by ADR.
+
+## 15. Readiness Reporting Rule
+
+Progress and acceptance must distinguish four gates: Architecture Complete, Sandbox Complete, Integration Complete, and Production Ready. A lower-layer sandbox pass never implies real adapter or infrastructure production readiness.
+
+The authoritative readiness matrix is [26_LAYER_READINESS_MATRIX.md](26_LAYER_READINESS_MATRIX.md).

@@ -328,6 +328,7 @@
 - [23_MASTER_USE_CASE_CAPABILITY_MATRIX.md](23_MASTER_USE_CASE_CAPABILITY_MATRIX.md) — SSOT ของ 72 Use Cases
 - [24_AGILE_KANBAN_72_USE_CASE_COMPLETION.md](24_AGILE_KANBAN_72_USE_CASE_COMPLETION.md) — Kanban/Engineering completion
 - [25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md](25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md) — UI Facade → Engines headless acceptance
+- [26_LAYER_READINESS_MATRIX.md](26_LAYER_READINESS_MATRIX.md) — readiness แยก Architecture / Sandbox / Integration / Production ราย layer
 - [use_case_catalog.json](use_case_catalog.json) — machine-readable use-case catalog
 - [use_case_evidence.json](use_case_evidence.json) — machine-readable evidence mapping
 

@@ -69,3 +69,7 @@ Technology baseline:
 - ทุก use case ต้องทดสอบได้แบบ headless
 - state-changing operation ใช้ Authorize → Validate → Plan → Interlock → Apply → Read-back → Verify → Publish → Audit
 - การเปลี่ยน architecture boundary ต้องมี ADR
+
+## Layer Readiness
+
+สถานะความพร้อมต้องรายงานแยกเป็น Architecture / Sandbox / Integration / Production ตาม [26_LAYER_READINESS_MATRIX.md](docs/26_LAYER_READINESS_MATRIX.md) เพื่อป้องกันการใช้คำว่า "เสร็จ" แบบกำกวม
