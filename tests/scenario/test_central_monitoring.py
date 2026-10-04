@@ -59,20 +59,33 @@ def _heartbeat_into_core(
     core.ingest(payload)
 
 
-def test_multiple_agents_are_visible_from_one_central_api() -> None:
+def test_six_host_site_is_visible_from_one_central_api() -> None:
     clock = FakeClock(NOW)
     core = _core(clock)
     api = ReadOnlyControlApi(core)
 
-    client, client_transport = _agent("CLIENT-01", "client", clock)
-    database, database_transport = _agent("DB-SERVER", "database_server", clock)
-
-    _heartbeat_into_core(core, client, client_transport)
-    _heartbeat_into_core(core, database, database_transport)
+    host_specs = [
+        ("DB-SERVER", "database_server"),
+        ("CLIENT-01", "client"),
+        ("CLIENT-02", "client"),
+        ("CLIENT-03", "client"),
+        ("CLIENT-04", "client"),
+        ("CLIENT-05", "client"),
+    ]
+    for host_id, role in host_specs:
+        agent, transport = _agent(host_id, role, clock)
+        _heartbeat_into_core(core, agent, transport)
 
     hosts = api.list_hosts()
 
-    assert [host["hostId"] for host in hosts] == ["CLIENT-01", "DB-SERVER"]
+    assert [host["hostId"] for host in hosts] == [
+        "CLIENT-01",
+        "CLIENT-02",
+        "CLIENT-03",
+        "CLIENT-04",
+        "CLIENT-05",
+        "DB-SERVER",
+    ]
     assert all(host["freshness"] == "ONLINE" for host in hosts)
     assert all(host["policyRevision"] == 3 for host in hosts)
 
@@ -125,3 +138,21 @@ def test_policy_can_be_staged_centrally_without_enforcement() -> None:
     assert policy is not None
     assert policy["policy_revision"] == 4
     assert policy["internet"]["allowed"] is False
+
+
+def test_all_hosts_converge_offline_after_site_outage_timeout() -> None:
+    clock = FakeClock(NOW)
+    core = _core(clock)
+
+    for index in range(1, 6):
+        agent, transport = _agent(f"CLIENT-{index:02d}", "client", clock)
+        _heartbeat_into_core(core, agent, transport)
+
+    database, database_transport = _agent("DB-SERVER", "database_server", clock)
+    _heartbeat_into_core(core, database, database_transport)
+
+    clock.advance(timedelta(seconds=30))
+
+    assert all(view.freshness is FreshnessState.OFFLINE for view in core.list_hosts())
+    assert len(core.list_alarms()) == 6
+    assert all(alarm.code == "AGENT_OFFLINE" for alarm in core.list_alarms())
