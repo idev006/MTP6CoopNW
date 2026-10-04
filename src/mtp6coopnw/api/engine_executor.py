@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Protocol
 
-from mtp6coopnw.contracts import OperationStage
 from mtp6coopnw.operations import MutableHost, OperationEngine, Planner
 from mtp6coopnw.policy import PolicyEngine
 
