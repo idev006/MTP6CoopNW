@@ -1,3 +1,8 @@
+from mtp6coopnw.policy.advanced import (
+    SpecialDateRule,
+    TemporaryGrant,
+    resolve_temporal_override,
+)
 from mtp6coopnw.policy.engine import (
     EffectivePolicy,
     PolicyConflictError,
@@ -14,6 +19,9 @@ __all__ = [
     "PolicyDecision",
     "PolicyEngine",
     "ScheduleRule",
+    "SpecialDateRule",
+    "TemporaryGrant",
     "VersionedPolicyStore",
     "canonical_policy_hash",
+    "resolve_temporal_override",
 ]

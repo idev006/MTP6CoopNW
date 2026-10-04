@@ -1,5 +1,3 @@
-"""Persistence abstractions and implementations."""
+from mtp6coopnw.persistence.json_store import AtomicJsonPolicyStore
 
-from mtp6coopnw.persistence.policy_cache import JsonFilePolicyStore, PolicyCacheError
-
-__all__ = ["JsonFilePolicyStore", "PolicyCacheError"]
+__all__ = ["AtomicJsonPolicyStore"]
