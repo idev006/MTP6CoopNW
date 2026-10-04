@@ -36,7 +36,7 @@ class ControlCore:
         if event_name != "agent.heartbeat":
             raise TelemetryIngestError(f"Unsupported event: {event_name}")
 
-        timestamp = _parse_timestamp(event.get("timestamp"))
+        _parse_timestamp(event.get("timestamp"))
         data = event.get("data")
         if not isinstance(data, dict):
             raise TelemetryIngestError("Heartbeat event requires data object")
@@ -52,10 +52,13 @@ class ControlCore:
         if not isinstance(role, str) or not role:
             raise TelemetryIngestError("Heartbeat snapshot requires role")
 
+        # Freshness is based on when Core actually receives the heartbeat.
+        # The agent-reported timestamp remains in the audited event/snapshot for diagnostics.
+        received_at = self.clock.now()
         self.hosts.ingest_heartbeat(
             host_id=host_id,
             role=role,
-            timestamp=timestamp,
+            timestamp=received_at,
             snapshot=snapshot,
         )
         self.audit_store.append(dict(event))
