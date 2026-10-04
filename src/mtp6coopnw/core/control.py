@@ -8,6 +8,8 @@ from mtp6coopnw.adapters import AuditStore, ClockPort
 from mtp6coopnw.core.alarms import CentralAlarm, alarms_for_host
 from mtp6coopnw.core.registry import HostRegistry, HostView, PolicyRegistry
 
+_ALLOWED_ROLES = {"client", "database_server", "control"}
+
 
 class TelemetryIngestError(ValueError):
     """Raised when telemetry does not match the Core read-only contract."""
@@ -21,6 +23,7 @@ class ControlCore:
     policies: PolicyRegistry
 
     def register_host(self, host_id: str, role: str) -> None:
+        _validate_role(role)
         self.hosts.register(host_id, role)
         self.audit_store.append(
             {
@@ -36,7 +39,7 @@ class ControlCore:
         if event_name != "agent.heartbeat":
             raise TelemetryIngestError(f"Unsupported event: {event_name}")
 
-        _parse_timestamp(event.get("timestamp"))
+        source_timestamp = _parse_timestamp(event.get("timestamp"))
         data = event.get("data")
         if not isinstance(data, dict):
             raise TelemetryIngestError("Heartbeat event requires data object")
@@ -51,16 +54,52 @@ class ControlCore:
             raise TelemetryIngestError("Heartbeat snapshot requires hostId")
         if not isinstance(role, str) or not role:
             raise TelemetryIngestError("Heartbeat snapshot requires role")
+        _validate_role(role)
 
-        # Freshness is based on when Core actually receives the heartbeat.
-        # The agent-reported timestamp remains in the audited event/snapshot for diagnostics.
         received_at = self.clock.now()
-        self.hosts.ingest_heartbeat(
+        result = self.hosts.ingest_heartbeat(
             host_id=host_id,
             role=role,
-            timestamp=received_at,
+            received_at=received_at,
+            source_timestamp=source_timestamp,
             snapshot=snapshot,
         )
+
+        if result == "STALE":
+            self.audit_store.append(
+                {
+                    "event": "core.heartbeat_rejected",
+                    "hostId": host_id,
+                    "reason": "STALE",
+                    "timestamp": received_at.isoformat(),
+                    "sourceTimestamp": source_timestamp.isoformat(),
+                }
+            )
+            raise TelemetryIngestError("Stale heartbeat rejected")
+
+        if result == "CONFLICT":
+            self.audit_store.append(
+                {
+                    "event": "core.heartbeat_rejected",
+                    "hostId": host_id,
+                    "reason": "CONFLICT",
+                    "timestamp": received_at.isoformat(),
+                    "sourceTimestamp": source_timestamp.isoformat(),
+                }
+            )
+            raise TelemetryIngestError("Conflicting heartbeat timestamp rejected")
+
+        if result == "DUPLICATE":
+            self.audit_store.append(
+                {
+                    "event": "core.heartbeat_duplicate",
+                    "hostId": host_id,
+                    "timestamp": received_at.isoformat(),
+                    "sourceTimestamp": source_timestamp.isoformat(),
+                }
+            )
+            return
+
         self.audit_store.append(dict(event))
 
     def host(self, host_id: str) -> HostView:
@@ -90,6 +129,11 @@ class ControlCore:
 
     def get_policy(self, host_id: str) -> dict[str, Any] | None:
         return self.policies.get(host_id)
+
+
+def _validate_role(role: str) -> None:
+    if role not in _ALLOWED_ROLES:
+        raise TelemetryIngestError(f"Unsupported host role: {role}")
 
 
 def _parse_timestamp(value: Any) -> datetime:
