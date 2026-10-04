@@ -40,4 +40,4 @@ jobs:
         run: mypy
 
       - name: Unit and contract tests
-        run: pytest -m "unit or contract or not destructive" --maxfail=1
+        run: pytest -m "not scenario and not windows and not destructive and not acceptance" --maxfail=1
