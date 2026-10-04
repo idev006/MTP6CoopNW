@@ -1,23 +1,30 @@
 from __future__ import annotations
 
-from mtp6coopnw.api import ReadOnlyControlApi
+from typing import Any, Protocol
 
 
-def render_status(api: ReadOnlyControlApi) -> str:
-    hosts = api.list_hosts()
-    alarms = api.get_alarms()
+class StatusFacade(Protocol):
+    def system_status(self) -> dict[str, Any]: ...
+
+
+def render_status(api: StatusFacade) -> str:
+    status = api.system_status()
+    hosts = status["hosts"]
+    alarms = status["alarms"]
 
     lines = [
         "MTP6CoopNW Central Status",
-        f"Hosts: {len(hosts)}",
-        f"Active alarms: {len(alarms)}",
+        f"Hosts: {status['summary']['hostCount']}",
+        f"Active alarms: {status['summary']['activeAlarmCount']}",
         "",
         "HOST | ROLE | FRESHNESS | HEALTH | POLICY",
     ]
 
     for host in hosts:
-        health = "HEALTHY" if host["healthy"] is True else (
-            "DEGRADED" if host["healthy"] is False else "UNKNOWN"
+        health = (
+            "HEALTHY"
+            if host["healthy"] is True
+            else ("DEGRADED" if host["healthy"] is False else "UNKNOWN")
         )
         revision = host["policyRevision"]
         lines.append(
