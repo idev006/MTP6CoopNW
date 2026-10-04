@@ -47,7 +47,7 @@ Upward asynchronous flow:
 
 | Layer | Primary responsibility | A | S | I | P | Current evidence / note |
 |---|---|:---:|:---:|:---:|:---:|---|
-| 1. Concrete UI / UX | Rendering, input, navigation, accessibility | ✅ | ⚠️ | ❌ | ❌ | Headless UI contract exists; concrete production GUI/toolkit is not yet the acceptance target. |
+| 1. Concrete UI / UX | Rendering, input, navigation, accessibility | ✅ | ⚠️ | ❌ | ❌ | PySide6 six-page shell source now exists and is boundary-tested; Qt runtime/widget acceptance is pending on an environment with PySide6. |
 | 2. Presenter / ViewModel | Presentation state, event application, resync, operation progress | ✅ | ✅ | ⚠️ | ❌ | DashboardPresenter/ViewModels and fake-facade tests exist; concrete GUI binding remains pending. |
 | 3. UI Facade | Presentation-ready queries/commands/DTO projection | ✅ | ✅ | ⚠️ | ❌ | UiApplicationFacade, NetworkControlFacade, typed payloads, event gateway path exist; real UI binding pending. |
 | 4. Application Service APIs | Stable use-case programming contracts above engines | ✅ | ✅ | ⚠️ | ❌ | Protocol contracts and EngineCommandExecutor exist; production runtime integration still depends on real adapters/transport. |
@@ -77,7 +77,7 @@ Layers 2–7 have executable/headless implementation paths. Layer 1 is represent
 Current engineering statement:
 
 - Core architecture and headless application path: COMPLETE for sandbox scope.
-- Concrete GUI mechanics: PENDING.
+- Concrete GUI source baseline: IMPLEMENTED; runtime/widget/accessibility acceptance remains PENDING.
 - Real destructive Windows/Firewall/Route/SQL adapters: CONTROLLED INTEGRATION PENDING.
 - Real mTLS/certificate lifecycle: CONTROLLED INTEGRATION PENDING.
 - Real restart/recovery/site-topology acceptance: PENDING.

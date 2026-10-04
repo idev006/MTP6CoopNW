@@ -73,3 +73,7 @@ Technology baseline:
 ## Layer Readiness
 
 สถานะความพร้อมต้องรายงานแยกเป็น Architecture / Sandbox / Integration / Production ตาม [26_LAYER_READINESS_MATRIX.md](docs/26_LAYER_READINESS_MATRIX.md) เพื่อป้องกันการใช้คำว่า "เสร็จ" แบบกำกวม
+
+## Desktop UI
+
+Desktop UI baseline ใช้ Python + PySide6 (Qt 6) และยึดหลัก UI เป็น replaceable presentation shell ที่ทำงานผ่าน Presenter/ViewModel และ Facades เท่านั้น ดู [27_DESKTOP_UI_UX_PYSIDE6.md](docs/27_DESKTOP_UI_UX_PYSIDE6.md)
