@@ -18,3 +18,4 @@ ADR เป็นภาคผนวกของ Project Book ใช้บัน�
 - [ADR-008 — Versioned Policy Persistence and Replay Semantics](ADR-008-POLICY-PERSISTENCE-REPLAY.md)
 - [ADR-009 — Bounded Operation Stage, Cancellation and Rollback Contract](ADR-009-BOUNDED-OPERATION-LIFECYCLE.md)
 - [ADR-010 — Facade, Ports/Adapters and Replaceable Presentation Layer](ADR-010-FACADE-PORTS-ADAPTERS-UI.md)
+- [ADR-011 — Event-Driven UI Stream](ADR-011-EVENT-DRIVEN-UI-STREAM.md)

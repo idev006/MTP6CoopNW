@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
 from mtp6coopnw.agent import AgentIdentity, ReadOnlyAgent
 from mtp6coopnw.api import ReadOnlyControlApi
 from mtp6coopnw.cli.status import render_status
@@ -17,6 +19,8 @@ from mtp6coopnw.testing import (
     InMemoryAuditStore,
     InMemoryPolicyStore,
 )
+
+pytestmark = pytest.mark.scenario
 
 NOW = datetime(2026, 10, 3, 10, 0, tzinfo=UTC)
 

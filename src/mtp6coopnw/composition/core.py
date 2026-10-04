@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from mtp6coopnw.adapters import AuditStore, ClockPort
 from mtp6coopnw.api import ReadOnlyControlFacade
 from mtp6coopnw.core import ControlCore, HostRegistry, PolicyRegistry
+from mtp6coopnw.observability import EventPublisher
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,6 +28,7 @@ def compose_read_only_core(
     clock: ClockPort,
     audit_store: AuditStore,
     policy_registry: PolicyRegistry | None = None,
+    event_publisher: EventPublisher | None = None,
 ) -> ReadOnlyControlFacade:
     """Assemble the headless read-only Core behind its stable facade."""
     core = ControlCore(
@@ -37,5 +39,6 @@ def compose_read_only_core(
             offline_after_seconds=settings.offline_after_seconds,
         ),
         policies=policy_registry or PolicyRegistry(),
+        event_publisher=event_publisher,
     )
     return ReadOnlyControlFacade(core)

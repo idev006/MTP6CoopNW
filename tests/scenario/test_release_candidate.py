@@ -24,6 +24,8 @@ from mtp6coopnw.policy import (
 )
 from mtp6coopnw.reconciliation import ReconciliationEngine, detect_drift
 
+pytestmark = pytest.mark.scenario
+
 NOW = datetime(2026, 10, 5, 1, 0, tzinfo=UTC)
 BASE = {
     "policy_revision": 1,

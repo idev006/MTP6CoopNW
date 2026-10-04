@@ -6,6 +6,7 @@ from typing import Any
 from uuid import uuid4
 
 from mtp6coopnw.contracts import OperationStage
+from mtp6coopnw.observability import EventPublisher
 from mtp6coopnw.policy import EffectivePolicy
 
 
@@ -114,6 +115,7 @@ class OperationResult:
 class OperationEngine:
     apply_timeout_seconds: int = 30
     verify_timeout_seconds: int = 20
+    event_publisher: EventPublisher | None = None
 
     def execute(
         self,
@@ -124,15 +126,19 @@ class OperationEngine:
         simulated_apply_seconds: int = 0,
         simulated_verify_seconds: int = 0,
     ) -> OperationResult:
-        del now
-        history = [
+        history: list[OperationStage] = []
+        before = host.state
+
+        for stage in (
             OperationStage.REQUESTED,
             OperationStage.VALIDATING,
             OperationStage.PLANNING,
-        ]
-        before = host.state
+        ):
+            self._stage(stage, plan=plan, now=now, history=history)
+
         if plan.noop:
-            history.extend([OperationStage.VERIFYING, OperationStage.COMPLETED])
+            self._stage(OperationStage.VERIFYING, plan=plan, now=now, history=history)
+            self._stage(OperationStage.COMPLETED, plan=plan, now=now, history=history)
             return OperationResult(
                 plan.operation_id,
                 OperationStage.COMPLETED,
@@ -141,9 +147,15 @@ class OperationEngine:
                 history=tuple(history),
             )
 
-        history.append(OperationStage.APPLYING)
+        self._stage(OperationStage.APPLYING, plan=plan, now=now, history=history)
         if simulated_apply_seconds > self.apply_timeout_seconds:
-            history.append(OperationStage.TIMED_OUT)
+            self._stage(
+                OperationStage.TIMED_OUT,
+                plan=plan,
+                now=now,
+                history=history,
+                error="apply timeout",
+            )
             return OperationResult(
                 plan.operation_id,
                 OperationStage.TIMED_OUT,
@@ -157,23 +169,58 @@ class OperationEngine:
             for change in plan.changes:
                 host.apply(change)
         except Exception as exc:
-            history.extend([OperationStage.FAILED, OperationStage.ROLLING_BACK])
+            error = str(exc)
+            self._stage(
+                OperationStage.FAILED,
+                plan=plan,
+                now=now,
+                history=history,
+                error=error,
+            )
+            self._stage(
+                OperationStage.ROLLING_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             self._restore(host, before)
-            history.append(OperationStage.ROLLED_BACK)
+            self._stage(
+                OperationStage.ROLLED_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             return OperationResult(
                 plan.operation_id,
                 OperationStage.ROLLED_BACK,
                 host.state,
                 True,
-                str(exc),
+                error,
                 tuple(history),
             )
 
-        history.append(OperationStage.VERIFYING)
+        self._stage(OperationStage.VERIFYING, plan=plan, now=now, history=history)
         if simulated_verify_seconds > self.verify_timeout_seconds or host.fail_verification:
-            history.extend([OperationStage.FAILED, OperationStage.ROLLING_BACK])
+            self._stage(
+                OperationStage.FAILED,
+                plan=plan,
+                now=now,
+                history=history,
+                error="verification failed",
+            )
+            self._stage(
+                OperationStage.ROLLING_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             self._restore(host, before)
-            history.append(OperationStage.ROLLED_BACK)
+            self._stage(
+                OperationStage.ROLLED_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             return OperationResult(
                 plan.operation_id,
                 OperationStage.ROLLED_BACK,
@@ -185,9 +232,26 @@ class OperationEngine:
 
         for change in plan.changes:
             if getattr(host.state, change.field) != change.after:
-                history.extend([OperationStage.FAILED, OperationStage.ROLLING_BACK])
+                self._stage(
+                    OperationStage.FAILED,
+                    plan=plan,
+                    now=now,
+                    history=history,
+                    error="read-back mismatch",
+                )
+                self._stage(
+                    OperationStage.ROLLING_BACK,
+                    plan=plan,
+                    now=now,
+                    history=history,
+                )
                 self._restore(host, before)
-                history.append(OperationStage.ROLLED_BACK)
+                self._stage(
+                    OperationStage.ROLLED_BACK,
+                    plan=plan,
+                    now=now,
+                    history=history,
+                )
                 return OperationResult(
                     plan.operation_id,
                     OperationStage.ROLLED_BACK,
@@ -196,10 +260,28 @@ class OperationEngine:
                     "read-back mismatch",
                     tuple(history),
                 )
+
         if not host.state.lan_reachable or not host.state.control_reachable:
-            history.extend([OperationStage.FAILED, OperationStage.ROLLING_BACK])
+            self._stage(
+                OperationStage.FAILED,
+                plan=plan,
+                now=now,
+                history=history,
+                error="control-channel interlock",
+            )
+            self._stage(
+                OperationStage.ROLLING_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             self._restore(host, before)
-            history.append(OperationStage.ROLLED_BACK)
+            self._stage(
+                OperationStage.ROLLED_BACK,
+                plan=plan,
+                now=now,
+                history=history,
+            )
             return OperationResult(
                 plan.operation_id,
                 OperationStage.ROLLED_BACK,
@@ -209,13 +291,37 @@ class OperationEngine:
                 tuple(history),
             )
 
-        history.append(OperationStage.COMPLETED)
+        self._stage(OperationStage.COMPLETED, plan=plan, now=now, history=history)
         return OperationResult(
             plan.operation_id,
             OperationStage.COMPLETED,
             host.state,
             False,
             history=tuple(history),
+        )
+
+    def _stage(
+        self,
+        stage: OperationStage,
+        *,
+        plan: OperationPlan,
+        now: datetime,
+        history: list[OperationStage],
+        error: str | None = None,
+    ) -> None:
+        history.append(stage)
+        if self.event_publisher is None:
+            return
+        data: dict[str, Any] = {"stage": stage.value}
+        if error is not None:
+            data["error"] = error
+        self.event_publisher.publish(
+            "operation.stage_changed",
+            timestamp=now,
+            source="operation-engine",
+            host_id=plan.host_id,
+            operation_id=plan.operation_id,
+            data=data,
         )
 
     @staticmethod
