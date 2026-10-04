@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -10,6 +10,7 @@ from mtp6coopnw.core import (
     PolicyRegistry,
     TelemetryIngestError,
 )
+from mtp6coopnw.observability import FreshnessState
 from mtp6coopnw.testing import FakeClock, InMemoryAuditStore
 
 NOW = datetime(2026, 10, 3, 10, 30, tzinfo=UTC)
@@ -66,3 +67,25 @@ def test_degraded_agent_produces_central_alarm() -> None:
 
     assert len(alarms) == 1
     assert alarms[0].code == "AGENT_DEGRADED"
+
+
+def test_freshness_uses_core_receipt_time_not_agent_clock() -> None:
+    core = _core()
+    future_agent_time = NOW + timedelta(hours=3)
+    core.ingest(
+        {
+            "event": "agent.heartbeat",
+            "timestamp": future_agent_time.isoformat(),
+            "data": {
+                "snapshot": {
+                    "hostId": "CLIENT-01",
+                    "role": "client",
+                    "capturedAt": future_agent_time.isoformat(),
+                    "healthy": True,
+                }
+            },
+        }
+    )
+
+    assert core.host("CLIENT-01").freshness is FreshnessState.ONLINE
+    assert core.host("CLIENT-01").last_heartbeat == NOW
