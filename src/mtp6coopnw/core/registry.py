@@ -13,6 +13,7 @@ class HostRecord:
     host_id: str
     role: str
     last_heartbeat: datetime | None = None
+    last_source_timestamp: datetime | None = None
     policy_revision: int | None = None
     healthy: bool | None = None
     snapshot: dict[str, Any] = field(default_factory=dict)
@@ -64,11 +65,22 @@ class HostRegistry:
         *,
         host_id: str,
         role: str,
-        timestamp: datetime,
+        received_at: datetime,
+        source_timestamp: datetime,
         snapshot: dict[str, Any],
-    ) -> None:
+    ) -> str:
         record = self.register(host_id, role)
-        record.last_heartbeat = timestamp
+
+        if record.last_source_timestamp is not None:
+            if source_timestamp < record.last_source_timestamp:
+                return "STALE"
+            if source_timestamp == record.last_source_timestamp:
+                if snapshot == record.snapshot:
+                    return "DUPLICATE"
+                return "CONFLICT"
+
+        record.last_heartbeat = received_at
+        record.last_source_timestamp = source_timestamp
         revision = snapshot.get("policyRevision")
         record.policy_revision = (
             revision if isinstance(revision, int) and not isinstance(revision, bool) else None
@@ -76,6 +88,7 @@ class HostRegistry:
         healthy = snapshot.get("healthy")
         record.healthy = healthy if isinstance(healthy, bool) else None
         record.snapshot = copy.deepcopy(snapshot)
+        return "ACCEPTED"
 
     def get_view(self, host_id: str, *, now: datetime) -> HostView:
         record = self._hosts[host_id]
