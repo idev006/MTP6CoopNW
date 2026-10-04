@@ -16,3 +16,4 @@ ADR เป็นภาคผนวกของ Project Book ใช้บัน�
 - [ADR-006 — State / Stage / Cycle Model](ADR-006-STATE-STAGE-CYCLE.md)
 - [ADR-007 — Agent-Initiated Mutual-TLS Core Transport](ADR-007-AGENT-INITIATED-MTLS-TRANSPORT.md)
 - [ADR-008 — Versioned Policy Persistence and Replay Semantics](ADR-008-POLICY-PERSISTENCE-REPLAY.md)
+- [ADR-009 — Bounded Operation Stage, Cancellation and Rollback Contract](ADR-009-BOUNDED-OPERATION-LIFECYCLE.md)
