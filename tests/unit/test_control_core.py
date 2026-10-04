@@ -4,9 +4,13 @@ from datetime import UTC, datetime
 
 import pytest
 
-from mtp6coopnw.core import ControlCore, HostRegistry, PolicyRegistry, TelemetryIngestError
+from mtp6coopnw.core import (
+    ControlCore,
+    HostRegistry,
+    PolicyRegistry,
+    TelemetryIngestError,
+)
 from mtp6coopnw.testing import FakeClock, InMemoryAuditStore
-
 
 NOW = datetime(2026, 10, 3, 10, 30, tzinfo=UTC)
 
