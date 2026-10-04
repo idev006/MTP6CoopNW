@@ -79,6 +79,21 @@ Core ระบุ desired state; Agent/Adapter converge actual state ไปห�
 ### 1.8 Safe Dry Run
 state-changing operation ควรรองรับ plan/dry-run เพื่อ preview current state, desired state, changes, risks และ validation result
 
+### 1.9 Engine API → Application Service → Facade → UI
+คำว่า API ในโครงการหมายถึง programming contract ไม่จำเป็นต้องเป็น Web API.
+
+Engine capabilities ต้องถูก expose ผ่าน application-facing contracts แล้ว Facade จึงนำไปประกอบเป็นบริการสำหรับ UI/UX.
+
+UI/UX เป็น replaceable presentation shell และต้องไม่มี business/control logic สำคัญ.
+
+### 1.10 Dependency Inversion
+Facade/Application orchestrator ควรขึ้นกับ Protocol/interface ที่แคบแทน concrete engine class เมื่อเหมาะสม.
+
+Composition Root เป็นจุดประกอบ concrete implementations.
+
+### 1.11 Typed Contracts
+cross-layer contracts ใหม่ต้อง prefer dataclass/TypedDict/Protocol/domain DTO แทน broad dict[str, Any]. Serialization boundary ยังใช้ dictionary/JSON ได้เมื่อมี schema/version ชัดเจน.
+
 ## 2. Proposed Repository Structure
 
 ```text
@@ -489,3 +504,18 @@ Read → Model → Fake → Observe → Test → Real Adapter → Verify → Aut
 - no secrets
 - rollback/recovery documented
 - traceability updated
+
+## 15. Architecture Quality Gate
+
+ก่อน merge ต้องตรวจ:
+- UI ไม่ import Engine/Adapter internals
+- Facade ไม่ duplicate domain policy
+- external I/O อยู่หลัง Port
+- use case รันแบบ headless ได้
+- time logic ใช้ ClockPort/FakeClock
+- destructive command มี authorization/interlock/verify/rollback
+- result/event/audit structured
+- contract typed ตามมาตรฐาน
+- architecture change อัปเดต Project Book/ADR
+
+รายละเอียดเต็ม: [20_ARCHITECTURE_CONSTITUTION.md](20_ARCHITECTURE_CONSTITUTION.md).

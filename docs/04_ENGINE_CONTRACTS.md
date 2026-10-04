@@ -186,3 +186,35 @@ Transport ต้อง replaceable โดย semantic contract ไม่เป�
 - DRIFT_DETECTED
 - ROLLBACK_FAILED
 - UNKNOWN_ERROR
+
+## Application Service API Boundary
+
+Engine API คือ programming interface ของ capability ไม่จำเป็นต้องเป็น HTTP/REST.
+
+Application Service APIs ต้อง:
+- expose use case ที่ครบถ้วนโดยไม่พึ่ง UI,
+- orchestrate Engines โดยไม่ผูกกับ concrete UI,
+- ใช้ narrow Protocol/interface เมื่อเหมาะสม,
+- คืน typed structured result/DTO,
+- publish events และ audit ตาม contract,
+- revalidate authorization/interlock สำหรับ command.
+
+UI Facades อยู่เหนือ Application Service API และทำ presentation projection/aggregation เท่านั้น.
+
+Target contract direction:
+
+    UI Facade → Application Service Protocol → Engine Protocol → Port Protocol
+
+ไม่อนุญาต:
+
+    UI → concrete Engine
+    UI → Adapter
+    Facade → PowerShell/Windows
+    Engine → UI framework
+
+Typed-contract migration:
+- ลด broad dict[str, Any] ภายในระบบ
+- ใช้ dataclass / TypedDict / Protocol / domain DTO
+- dict ใช้ได้ที่ serialization boundary โดยมี schema/version ชัดเจน
+
+รายละเอียด normative: [20_ARCHITECTURE_CONSTITUTION.md](20_ARCHITECTURE_CONSTITUTION.md).

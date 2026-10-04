@@ -306,6 +306,31 @@
 
 ## ภาคผนวก
 
+### บทที่ 21 — Architecture Constitution & Software Engineering Standards
+ไฟล์: [20_ARCHITECTURE_CONSTITUTION.md](20_ARCHITECTURE_CONSTITUTION.md)
+
+หัวข้อหลัก:
+- Canonical Layer Model
+- Engine API / Application Service API
+- UI Facade / Presenter / ViewModel
+- Dependency Rule
+- Ports & Adapters
+- Design Pattern Policy
+- Typed Contract Standard
+- Command/Query separation
+- Event-driven presentation
+- Automated test layers L0–L7
+- UI as Replaceable Mask
+- Architecture Definition of Done
+
+## เอกสารควบคุมการพัฒนาและหลักฐานปัจจุบัน
+
+- [23_MASTER_USE_CASE_CAPABILITY_MATRIX.md](23_MASTER_USE_CASE_CAPABILITY_MATRIX.md) — SSOT ของ 72 Use Cases
+- [24_AGILE_KANBAN_72_USE_CASE_COMPLETION.md](24_AGILE_KANBAN_72_USE_CASE_COMPLETION.md) — Kanban/Engineering completion
+- [25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md](25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md) — UI Facade → Engines headless acceptance
+- [use_case_catalog.json](use_case_catalog.json) — machine-readable use-case catalog
+- [use_case_evidence.json](use_case_evidence.json) — machine-readable evidence mapping
+
 ### Appendix A — Architecture Decision Records
 ไฟล์: [ADR/README.md](ADR/README.md)
 
@@ -331,7 +356,12 @@
 - Enforcement
 
 ### Appendix C — Traceability Matrix
-สถานะ: Planned
+สถานะ: Active
+
+แหล่งอ้างอิงหลัก:
+- 23_MASTER_USE_CASE_CAPABILITY_MATRIX.md
+- use_case_catalog.json
+- use_case_evidence.json
 
 จะเชื่อม:
 Requirement → Use Case → Module/Adapter → Test Case → Evidence

@@ -56,3 +56,16 @@ Technology baseline:
 - NIC: 1 per host
 
 > ค่าเหล่านี้เป็น baseline design และต้องผ่าน site verification ก่อน production deployment.
+
+## Architecture Constitution
+
+เอกสาร normative ด้านสถาปัตยกรรมและมาตรฐานวิศวกรรมซอฟต์แวร์อยู่ที่ [20_ARCHITECTURE_CONSTITUTION.md](docs/20_ARCHITECTURE_CONSTITUTION.md)
+
+กฎหลักของโครงการ:
+- Engine ให้บริการความสามารถผ่าน programming contracts/API ซึ่งไม่จำเป็นต้องเป็น Web API
+- UI เรียกผ่าน Facade/Application Service boundaries
+- UI/UX เป็น replaceable presentation shell และไม่มี business/control logic สำคัญ
+- External side effects ทุกชนิดผ่าน Ports/Adapters
+- ทุก use case ต้องทดสอบได้แบบ headless
+- state-changing operation ใช้ Authorize → Validate → Plan → Interlock → Apply → Read-back → Verify → Publish → Audit
+- การเปลี่ยน architecture boundary ต้องมี ADR

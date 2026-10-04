@@ -30,6 +30,10 @@ Real Enforcement
   ↓
 Reconciliation/Drift
   ↓
+Application Service APIs
+  ↓
+UI Facades / Presenter / ViewModel
+  ↓
 Central Control UI
   ↓
 Packaging/Rollout
@@ -375,3 +379,17 @@ The first source-code increment shall contain only:
 It must NOT change Windows Firewall, routes, IP configuration or SQL settings.
 
 This increment proves architecture and testability before system mutation begins.
+
+## 17. Architecture Hardening Gate
+
+ก่อน concrete UI ถือว่าพร้อม ต้องมี:
+- capability-oriented Engine/Application Service contracts
+- UI Facade contracts
+- Presenter/ViewModel contract
+- Facade → Engine headless E2E tests
+- fake adapters สำหรับ external side effects
+- typed DTO migration plan
+- Composition Root ที่รวม concrete implementations
+- architecture dependency checks
+
+UI implementation เป็นขั้น presentation หลัง business behavior ผ่าน headless tests แล้ว ไม่ใช่สถานที่สร้าง business rules.
