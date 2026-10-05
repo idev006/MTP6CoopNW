@@ -99,19 +99,7 @@ class ReadOnlyAgent:
 
     def heartbeat(self) -> AgentSnapshot:
         snapshot = self.collect_status()
-        event = EventRecord(
-            event="agent.heartbeat",
-            timestamp=self.clock.now(),
-            component="agent",
-            host_id=self.identity.host_id,
-            policy_revision=snapshot.policy_revision,
-            result="SUCCESS" if snapshot.healthy else "DEGRADED",
-            data={"snapshot": snapshot.to_dict(), "agentVersion": self.identity.version},
-        )
-        payload = event.to_dict()
-        self.transport.send("CORE", payload)
-        self.audit_store.append(payload)
-        self.metrics.increment("agent.heartbeat.count")
+        self._publish_heartbeat(snapshot)
         return snapshot
 
     def reconcile_read_only(self) -> AgentSnapshot:
@@ -132,7 +120,23 @@ class ReadOnlyAgent:
 
     def run_once(self) -> AgentSnapshot:
         snapshot = self.reconcile_read_only()
-        return self.heartbeat() if snapshot.healthy else snapshot
+        self._publish_heartbeat(snapshot)
+        return snapshot
+
+    def _publish_heartbeat(self, snapshot: AgentSnapshot) -> None:
+        event = EventRecord(
+            event="agent.heartbeat",
+            timestamp=self.clock.now(),
+            component="agent",
+            host_id=self.identity.host_id,
+            policy_revision=snapshot.policy_revision,
+            result="SUCCESS" if snapshot.healthy else "DEGRADED",
+            data={"snapshot": snapshot.to_dict(), "agentVersion": self.identity.version},
+        )
+        payload = event.to_dict()
+        self.transport.send("CORE", payload)
+        self.audit_store.append(payload)
+        self.metrics.increment("agent.heartbeat.count")
 
     def _read_adapter(
         self,

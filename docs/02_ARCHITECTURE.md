@@ -259,3 +259,29 @@ Slow cycle ใช้กับ drift, SQL/service health, disk, backup และ 
 
 ### Stage Timeout
 ทุก stage ที่รอ external effect ต้องมี timeout ที่กำหนดได้ และ timeout ต้องแปลงเป็น explicit stage/error ไม่ถือเป็น success.
+
+## Canonical API / Facade Boundary
+
+คำว่า API ใน MTP6CoopNW หมายถึง programming contract ระหว่าง components และไม่เท่ากับ Web API โดยอัตโนมัติ
+
+Canonical dependency:
+
+    Concrete UI / UX
+      ↓
+    Presenter / ViewModel
+      ↓
+    UI Facade
+      ↓
+    Application Service APIs
+      ↓
+    Domain / Control Engines
+      ↓
+    Ports
+      ↓
+    Adapters
+
+Facade มีหน้าที่ให้บริการ UI/UX ด้วย presentation-oriented contracts โดยเรียก Application Service APIs; business rules อยู่ใน Engines/Application layer ไม่อยู่ใน UI หรือ Facade
+
+UI ถือเป็น replaceable presentation shell. การเปลี่ยน Desktop → Web → CLI ต้องไม่บังคับให้เปลี่ยน policy semantics หรือ operation lifecycle.
+
+รายละเอียด normative: [20_ARCHITECTURE_CONSTITUTION.md](20_ARCHITECTURE_CONSTITUTION.md) และ ADR-012.

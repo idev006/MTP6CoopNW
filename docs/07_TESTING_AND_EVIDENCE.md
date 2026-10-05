@@ -56,3 +56,28 @@ Feature พร้อมใช้งานเมื่อ:
 - evidence recorded
 - no secrets in repo/log
 - rollback/recovery behavior documented
+
+## Layered Automated Test Model
+
+MTP6CoopNW ใช้ test seam ตาม architecture boundary:
+
+| Level | Scope | External side effect |
+|---|---|---|
+| L0 | Pure Domain Unit | none |
+| L1 | Engine Contract + fake ports | none |
+| L2 | Application Service use case | none |
+| L3 | Facade Contract / DTO projection | none |
+| L4 | Facade → Engines → Fake Adapter → Event → Presenter/ViewModel | none |
+| L5 | Adapter Contract | mock/controlled |
+| L6 | Concrete UI rendering/binding/navigation/accessibility | UI runtime |
+| L7 | Controlled Real-World Acceptance | Windows/SQL/network/mTLS |
+
+### Mandatory UI Functional Rule
+
+ทุก UI-visible use case ต้องทดสอบได้โดยไม่ launch GUI จริง ผ่าน Facade/Application contracts.
+
+Concrete GUI test มีหน้าที่พิสูจน์ presentation mechanics เท่านั้น เช่น rendering, click binding, navigation, keyboard/touch และ accessibility.
+
+Business behavior เช่น schedule, authorization, policy priority, rollback, safety interlock และ network intent ต้องถูกพิสูจน์ต่ำกว่า UI.
+
+Reference evidence: [25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md](25_UI_FACADE_ENGINE_E2E_ACCEPTANCE.md).

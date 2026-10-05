@@ -207,3 +207,32 @@ No feature is accepted if:
 - it has no structured error
 - it has no verification/read-back for state change
 - it has no automated test at the appropriate layer
+
+## 16. Facade-to-Engine UI Functional Automation
+
+ก่อนมี concrete GUI ต้องสามารถทดสอบเส้นทาง:
+
+    UI intent
+    → Command/UI Facade
+    → Application Service
+    → real Domain Engines
+    → Fake Adapters
+    → Application Events
+    → UI Facade
+    → Presenter/ViewModel
+
+กรณีขั้นต่ำ:
+- Host ON/OFF
+- Internet ON/OFF
+- Database access
+- Port policy
+- schedule boundary
+- maintenance/manual override/emergency
+- authorization rejection
+- operation progress
+- verification failure + rollback
+- stale/offline state
+- alarm lifecycle
+- event replay/resync
+
+หลักนี้ทำให้ UI เป็น replaceable mask และทำให้ business behavior ผ่าน automation ก่อนเริ่ม widget-specific testing.

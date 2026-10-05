@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "project": "MTP6CoopNW",
+  "generatedDate": "2026-10-04",
+  "sandboxCompletion": {
+    "completed": 72,
+    "total": 72
+  },
+  "note": "Sandbox completion is not production acceptance. Real OS/network/SQL/certificate behavior remains controlled-integration work where flagged.",
+  "useCases": {
+    "UC-HOST-001": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-HOST-002": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-HOST-003": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-HOST-004": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-HOST-005": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-HOST-006": {
+      "domain": "HOST",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-001": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-002": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-003": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-004": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-005": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-006": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-007": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-NET-008": {
+      "domain": "NETWORK",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-001": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-002": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-003": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-004": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-005": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-006": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-007": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCH-008": {
+      "domain": "SCHEDULE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-001": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-002": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-003": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-004": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-005": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-POL-006": {
+      "domain": "POLICY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-PLAN-001": {
+      "domain": "PLANNING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py"
+      ]
+    },
+    "UC-PLAN-002": {
+      "domain": "PLANNING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py"
+      ]
+    },
+    "UC-PLAN-003": {
+      "domain": "PLANNING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py"
+      ]
+    },
+    "UC-OPS-001": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-OPS-002": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-OPS-003": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-OPS-004": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-OPS-005": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-OPS-006": {
+      "domain": "OPERATIONS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/unit/test_event_bus.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-REC-001": {
+      "domain": "RECONCILIATION",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py"
+      ]
+    },
+    "UC-REC-002": {
+      "domain": "RECONCILIATION",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py"
+      ]
+    },
+    "UC-MON-001": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-002": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-003": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-004": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-005": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-006": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-MON-007": {
+      "domain": "MONITORING",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_central_monitoring.py",
+        "tests/scenario/test_fake_runtime.py"
+      ]
+    },
+    "UC-ALM-001": {
+      "domain": "ALARMS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-ALM-002": {
+      "domain": "ALARMS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-ALM-003": {
+      "domain": "ALARMS",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-UI-001": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-UI-002": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-UI-003": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-UI-004": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-UI-005": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-UI-006": {
+      "domain": "UI",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_ui_presenter.py",
+        "tests/unit/test_ui_application_facade.py",
+        "tests/scenario/test_reactive_ui_events.py"
+      ]
+    },
+    "UC-AUD-001": {
+      "domain": "AUDIT",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-AUD-002": {
+      "domain": "AUDIT",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SEC-001": {
+      "domain": "SECURITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SEC-002": {
+      "domain": "SECURITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SEC-003": {
+      "domain": "SECURITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SEC-004": {
+      "domain": "SECURITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-RES-001": {
+      "domain": "RESILIENCE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-RES-002": {
+      "domain": "RESILIENCE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-RES-003": {
+      "domain": "RESILIENCE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-RES-004": {
+      "domain": "RESILIENCE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-RES-005": {
+      "domain": "RESILIENCE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_remaining_capabilities.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-DB-001": {
+      "domain": "DATABASE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-DB-002": {
+      "domain": "DATABASE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-DB-003": {
+      "domain": "DATABASE",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": true,
+      "evidence": [
+        "tests/scenario/test_release_candidate.py",
+        "tests/scenario/test_remaining_capabilities.py"
+      ]
+    },
+    "UC-SCL-001": {
+      "domain": "SCALABILITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_composition.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-SCL-002": {
+      "domain": "SCALABILITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_composition.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    },
+    "UC-SCL-003": {
+      "domain": "SCALABILITY",
+      "sandboxStatus": "COMPLETE",
+      "realIntegrationRequired": false,
+      "evidence": [
+        "tests/unit/test_composition.py",
+        "tests/scenario/test_central_monitoring.py"
+      ]
+    }
+  }
+}
